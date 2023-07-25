@@ -18,19 +18,22 @@ public class MaximumNumberOfEventsThatCanBeAttendedII {
         if (start>=events.length || k<=0)return 0;
         if (dp[k].containsKey(start))return dp[k].get(start);
         int leaveEvent = maxValueDP(events,k,start+1);
-        int nextEvent = start;
-        for (; nextEvent < events.length; nextEvent++) {
-            if (events[nextEvent][0]>events[start][1])break;
-        }
+        int nextEvent = nextEvent(events,events[start][1],start,events.length);
         int takeEvent = events[start][2] + maxValueDP(events,k-1,nextEvent);
         int result = Math.max(leaveEvent,takeEvent);
         dp[k].put(start,result);
         return result;
     }
+    private int nextEvent(int[][] events, int target, int start, int end){
+        if (start>=end)return start;
+        int mid = start + (end-start)/2;
+        if (events[mid][0]<=target)return nextEvent(events,target,mid+1,end);
+        return nextEvent(events,target,start,mid);
+    }
 
     public static void main(String[] args) {
         MaximumNumberOfEventsThatCanBeAttendedII me2 = new MaximumNumberOfEventsThatCanBeAttendedII();
-        int events[][] = {{1,2,4},{3,4,3},{2,3,1}}, k = 2;
+        int events[][] = {{1,2,4},{3,4,3},{2,3,10}}, k = 2;
         System.out.println(me2.maxValue(events,k));
     }
 }
